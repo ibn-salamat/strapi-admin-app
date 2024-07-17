@@ -12,6 +12,7 @@ import { useSnackbar } from "notistack"
 import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
 import { setToken } from "@/src/helpers/token"
+import { BASE_URL } from "@/src/config"
 
 type FormValues = {
     email: string
@@ -30,7 +31,7 @@ export const SignIn = () => {
 
     const onSubmit = async (data: FormValues) => {
         try {
-        const response = await axios.post('http://localhost:1337/api/auth/local', {
+        const response = await axios.post(`${BASE_URL}/api/auth/local`, {
             identifier: data.email,
             password: data.password,
         })

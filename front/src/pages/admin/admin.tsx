@@ -1,4 +1,4 @@
-import { STRAPI_API_TOKEN } from "@/src/App"
+import { BASE_URL, STRAPI_API_TOKEN } from "@/src/config"
 import axios from "axios"
 import { useEffect } from "react"
 
@@ -6,7 +6,7 @@ export const Admin = () => {
 
     const getProducts = async () => {
         try {
-            await axios.get('http://localhost:1337/api/products', {
+            await axios.get(`${BASE_URL}/api/products`, {
                 
                 headers: {
                     Authorization: `Bearer ${STRAPI_API_TOKEN}`

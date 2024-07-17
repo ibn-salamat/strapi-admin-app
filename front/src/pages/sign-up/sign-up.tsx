@@ -31,7 +31,7 @@ export const SignUp = () => {
 
     const onSubmit = async (data: FormValues) => {
         try {
-        await axios.post(`${BASE_URL}/api/auth/local/register`, {
+        await axios.post(`${BASE_URL}/auth/local/register`, {
             username: data.username,
             email: data.email,
             password: data.password,

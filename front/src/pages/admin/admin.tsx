@@ -1,46 +1,48 @@
-import type { Product } from "@/src/types/product"
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { List, ListItem } from "@mui/material"
-import { BASE_URL, STRAPI_API_TOKEN } from "@/src/config"
+import {
+  CircularProgress,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Box
+} from "@mui/material"
+import { useGetProductsQuery } from "@/src/api/query/products"
 
 export const Admin = () => {
-    const [products, setProducts] = useState<{attributes: Product}[]>([])
+  const { data, isLoading } = useGetProductsQuery()
 
-    const getProducts = async () => {
-        try {
-            const response =  await axios.get(`${BASE_URL}/api/products`, {
-                headers: {
-                    Authorization: `Bearer ${STRAPI_API_TOKEN}`
-                }
-            })
+  if (isLoading) {
+    return <CircularProgress />
+  }
 
-            setProducts(response.data.data)
-            } catch (error) {
-                console.log(error)
-            }
-    }
+  return (
+    <Box style={{padding: 25}}>
+      <Typography variant="h5">Products</Typography>
 
-    useEffect(() => {
-        getProducts()
-    }, [])
-
-
-    return <>
-        <h1>Admin</h1>
-
-
-        <List>
-        {products.map((el) => {
-            const { attributes } = el;
-
-            return <ListItem>
-                product_id: {attributes.product_id} <br />
-                title: {attributes.title} <br />
-                price: {attributes.price}<br />
-
-            </ListItem>
-        })}
-        </List>
-    </>
+      <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>product_id</TableCell>
+            <TableCell>title</TableCell>
+            <TableCell>price</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.data.map(({attributes}) => (
+            <TableRow>
+              <TableCell>{attributes.product_id}</TableCell>
+              <TableCell>{attributes.title}</TableCell>
+              <TableCell>{attributes.price}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </Box>
+  )
 }

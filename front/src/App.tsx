@@ -4,7 +4,6 @@ import {
 import { router } from "./router";
 import { SnackbarProvider } from 'notistack';
 
-
 const App = () => {
   return (
     <SnackbarProvider>

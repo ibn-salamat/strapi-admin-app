@@ -1,0 +1,11 @@
+{
+  "name": "strapi-admin-app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install": "cd ./strapi-admin && npm i",
+    "start": "cd ./strapi-admin && npm start"
+  },
+  "author": "",
+  "license": "ISC"
+}

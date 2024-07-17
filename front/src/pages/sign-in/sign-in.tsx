@@ -9,6 +9,8 @@ import {
 import { useForm } from "react-hook-form"
 import axios from "axios"
 import { useSnackbar } from "notistack"
+import { useNavigate } from "react-router-dom"
+import { EnumRoutes } from "../../router"
 
 type FormValues = {
     email: string
@@ -16,8 +18,14 @@ type FormValues = {
 }
 
 export const SignIn = () => {
-    const { register, handleSubmit, formState: { errors, isLoading }} = useForm<FormValues>();
+    const { register, handleSubmit, formState: { errors, isLoading }} = useForm<FormValues>({
+      defaultValues: {
+        email: "test@test.com",
+        password: "testtest",
+      }
+    });
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: FormValues) => {
         try {
@@ -26,8 +34,7 @@ export const SignIn = () => {
             password: data.password,
         })
 
-        console.log(response)
-
+        console.log(response.data.jwt)
 
         } catch (error) {
             let message = ""
@@ -81,7 +88,7 @@ export const SignIn = () => {
 
         <Box style={{marginTop: 15, display: "flex", gap: 15}}>
             <Button size="small" color="primary" variant="contained" type="submit" disabled={isLoading}>Sign in</Button>
-            <Button size="small" color="primary">Sign up</Button>
+            <Button size="small" color="primary" onClick={() => navigate(EnumRoutes.SignUp)}>Sign up</Button>
         </Box>
         </form>
       </Card>

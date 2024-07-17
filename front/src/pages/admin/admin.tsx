@@ -16,14 +16,22 @@ import {
   useLazyGetProductByidQuery,
 } from "@/src/api/query/products"
 import { useEffect } from "react"
+import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
+import { useAppDispatch, useAppSelector } from "@/src/store"
 
 // TODO: move table into components
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [getProductById, { data: product }] = useLazyGetProductByidQuery()
 
+  const currentUser = useAppSelector(selectCurrentUser)
+  const dispatch = useAppDispatch()
+
+  console.log(currentUser)
+
   useEffect(() => {
     console.log(product?.data.id)
+    // dispatch(setCurrentUser({email: "ds"}))
   }, [product])
 
   if (isLoading) {

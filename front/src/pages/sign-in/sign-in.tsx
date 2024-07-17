@@ -7,6 +7,8 @@ import {
   Box,
 } from "@mui/material"
 import { useForm } from "react-hook-form"
+import axios from "axios"
+import { useSnackbar } from "notistack"
 
 type FormValues = {
     email: string
@@ -14,9 +16,27 @@ type FormValues = {
 }
 
 export const SignIn = () => {
-    const { register, handleSubmit, formState: { errors }} = useForm<FormValues>();
-    const onSubmit = (data: FormValues) => {
-        console.log(data)
+    const { register, handleSubmit, formState: { errors, isLoading }} = useForm<FormValues>();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const onSubmit = async (data: FormValues) => {
+        try {
+        const response = await axios.post('http://localhost:1337/api/auth/local', {
+            identifier: data.email,
+            password: data.password,
+        })
+
+        console.log(response)
+
+
+        } catch (error) {
+            let message = ""
+            if (axios.isAxiosError(error))  {
+               message = error.response?.data.error.message
+            } 
+
+            enqueueSnackbar(message || (error as Error).message || "Something wrong happened", { variant: "error"})
+        }
     }
 
   return (
@@ -60,7 +80,7 @@ export const SignIn = () => {
         </Box>
 
         <Box style={{marginTop: 15, display: "flex", gap: 15}}>
-            <Button size="small" color="primary" variant="contained" type="submit">Sign in</Button>
+            <Button size="small" color="primary" variant="contained" type="submit" disabled={isLoading}>Sign in</Button>
             <Button size="small" color="primary">Sign up</Button>
         </Box>
         </form>

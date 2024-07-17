@@ -10,7 +10,8 @@ import { useForm } from "react-hook-form"
 import axios from "axios"
 import { useSnackbar } from "notistack"
 import { useNavigate } from "react-router-dom"
-import { EnumRoutes } from "../../router"
+import { EnumRoutes } from "@/src/router"
+import { setToken } from "@/src/helpers/token"
 
 type FormValues = {
     email: string
@@ -34,7 +35,8 @@ export const SignIn = () => {
             password: data.password,
         })
 
-        console.log(response.data.jwt)
+        console.log(response.data.user)
+        setToken(response.data.jwt)
 
         } catch (error) {
             let message = ""

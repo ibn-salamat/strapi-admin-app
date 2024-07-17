@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "install": "concurrently \"cd ./strapi-admin && npm i\" \"cd ./front && npm i\"",
-    "start": "concurrently \"cd ./strapi-admin && npm start\" \"cd ./front && npm start\""
+    "start": "concurrently \"cd ./strapi-admin && npm run develop\" \"cd ./front && npm start\""
 
   },
   "author": "",

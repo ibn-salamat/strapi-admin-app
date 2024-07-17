@@ -36,8 +36,8 @@ export const SignIn = () => {
             password: data.password,
         })
 
-        console.log(response.data.user)
         setToken(response.data.jwt)
+        navigate(EnumRoutes.Admin)
 
         } catch (error) {
             let message = ""

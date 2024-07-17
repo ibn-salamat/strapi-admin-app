@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "install": "concurrently \"cd ./strapi-admin && npm i\" \"cd ./front && npm i\""
+    "install": "concurrently \"cd ./strapi-admin && npm i\" \"cd ./front && npm i\"",
+    "start": "concurrently \"cd ./strapi-admin && npm start\" \"cd ./front && npm start\""
+
   },
   "author": "",
   "license": "ISC",

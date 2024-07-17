@@ -14,7 +14,7 @@ export const productsApi = createApi({
         }
       })
     }),
-    getProductByid: builder.query<{}, number>({
+    getProductByid: builder.query<{data: Product}, number>({
       query: (id) => ({
         url: `/products/${id}`,
         headers: {

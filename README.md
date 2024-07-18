@@ -3,6 +3,7 @@
 install
 ~~~sh
 npm install
+npm start
 ~~~
 
 ## Refactor todo:

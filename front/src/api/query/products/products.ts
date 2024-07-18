@@ -22,8 +22,20 @@ export const productsApi = createApi({
         }
       })
     }),
+    createProduct: builder.mutation<{data: Product}, Product['attributes']>({
+      query: (product) => ({
+        method: "POST",
+        url: `/products`,
+        headers: {
+          Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+        },
+        body: {
+          data: product
+        }
+      })
+    })
   }),
 })
 
 
-export const { useGetProductsQuery, useLazyGetProductByidQuery } = productsApi
+export const { useGetProductsQuery, useLazyGetProductByidQuery, useCreateProductMutation } = productsApi

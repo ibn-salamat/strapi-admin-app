@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mui/material"
 import {
+    useCreateProductMutation,
   useGetProductsQuery,
   useLazyGetProductByidQuery,
 } from "@/src/api/query/products"
@@ -26,6 +27,7 @@ import { EnumRoutes } from "@/src/router"
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [getProductById, { data: product }] = useLazyGetProductByidQuery()
+  const [createProduct] = useCreateProductMutation()
 
   const currentUser = useAppSelector(selectCurrentUser)
   const dispatch = useAppDispatch()
@@ -67,7 +69,13 @@ export const Admin = () => {
         Products
         <Button onClick={logout}>Log out</Button>
       </Typography>
-      <Button variant="outlined">Create product</Button>
+      <Button variant="outlined" onClick={() => {
+        createProduct({
+            price: 1,
+            product_id: "dslfk",
+            title: "dkfl"
+        })
+      }}>Create product</Button>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

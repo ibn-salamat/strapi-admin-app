@@ -1,41 +1,37 @@
 import {
-  CircularProgress,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Button,
+    CircularProgress,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Box,
+    Button,
 } from "@mui/material"
 import {
-  useDeleteProductByIdMutation,
-  useGetProductsQuery,
-  useLazyGetUserByidQuery,
-  useUpdateUserCartMutation,
+    useDeleteProductByIdMutation,
+    useGetProductsQuery, useUpdateUserCartMutation
 } from "@/src/api/query"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
 import {
-  getCurrentUserFromLocalStorage,
-  saveCurrentUserToLocalStorage,
+    saveCurrentUserToLocalStorage
 } from "@/src/helpers"
 import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
 import { UserCart, CreateUpdateProductModal } from "@/src/components"
 import type { CartProduct, Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
-import { selectCartProducts, setCart, toggleFromCart } from "@/src/store/cart"
+import { selectCartProducts, toggleFromCart } from "@/src/store/cart"
 
 // TODO: move table into components
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
-  const [getUserById, getUserByIdResponse] = useLazyGetUserByidQuery()
   const [updateUserCart] = useUpdateUserCartMutation()
 
   const cartProducts = useAppSelector(selectCartProducts)
@@ -47,16 +43,6 @@ export const Admin = () => {
   const currentUser = useAppSelector(selectCurrentUser)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
-  const checkUser = () => {
-    const user = getCurrentUserFromLocalStorage()
-    if (!user) {
-      navigate(EnumRoutes.SignIn)
-      return
-    }
-
-    dispatch(setCurrentUser(user))
-  }
 
   const logout = () => {
     saveCurrentUserToLocalStorage(null)
@@ -93,20 +79,6 @@ export const Admin = () => {
       }),
     )
   }
-
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  useEffect(() => {
-    if (!currentUser) return
-    getUserById(currentUser.id)
-  }, [currentUser])
-
-  useEffect(() => {
-    if (!getUserByIdResponse.data) return
-    dispatch(setCart(getUserByIdResponse.data.cart || []))
-  }, [getUserByIdResponse.data])
 
   if (isLoading) {
     return <CircularProgress />

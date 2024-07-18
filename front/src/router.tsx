@@ -9,7 +9,7 @@ export enum EnumRoutes {
   Admin = "/",
 }
 
-export const routes = [
+const routes = [
   <Route path={EnumRoutes.SignUp} element={<SignUp />} />,
   <Route path={EnumRoutes.SignIn} element={<SignIn />} />,
   <Route path={EnumRoutes.Admin} element={<Admin />} />,

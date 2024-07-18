@@ -10,7 +10,7 @@ npm install
 - Eslint, Prettier config
 - Add Husky Precommit
 - make Table common components
-- create hook for currentuserLogic
+- ~~create hook for currentuserLogic~~
 - split RTK queries by logic
 
 

@@ -1,10 +1,8 @@
-import {
-  useNavigate
-} from "react-router-dom";
-import { BasicRoutes } from "./router";
+import { BasicRoutes } from "@/src/router"
+import { useCurrentUser } from "@/src/hooks"
 
 const App = () => {
-  const navigate = useNavigate()
+  useCurrentUser()
   
   return (
     <BasicRoutes />

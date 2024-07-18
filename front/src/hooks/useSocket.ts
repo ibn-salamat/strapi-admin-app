@@ -21,7 +21,7 @@ export const useSocket = () => {
   }
 
   const onProductChange = (response: { data: Product }) => {
-    enqueueSnackbar("Socket event happened", { variant: "success"})
+    enqueueSnackbar("Socket event fired", { variant: "success"})
     setEventResponse(response)
   }
 

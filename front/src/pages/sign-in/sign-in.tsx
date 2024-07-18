@@ -35,7 +35,7 @@ export const SignIn = () => {
 
     const onSubmit = async (data: FormValues) => {
         try {
-        const response = await axios.post(`${BASE_URL}/auth/local`, {
+        const response = await axios.post(`${BASE_URL}/api/auth/local`, {
             identifier: data.email,
             password: data.password,
         })

@@ -1,11 +1,11 @@
 import { BASE_URL } from "@/src/config"
+import type { Product } from "@/src/types/product"
 import { useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 
-export const socket = io(BASE_URL)
-
 export const useSocket = () => {
+  const socket = io(BASE_URL)
   const [isConnected, setIsConnected] = useState(socket.connected)
   const { enqueueSnackbar } = useSnackbar()
 
@@ -19,8 +19,8 @@ export const useSocket = () => {
     enqueueSnackbar("Socket disconnected", { variant: "error"})
   }
 
-  const onCreateProduct = data => {
-    console.log(data)
+  const onCreateProduct = (response: { data: Product }) => {
+    console.log(response.data)
   }
 
   useEffect(() => {
@@ -29,9 +29,9 @@ export const useSocket = () => {
     socket.on("product:create", onCreateProduct)
 
     return () => {
-      socket.off("connect", onConnect)
-      socket.off("disconnect", onDisconnect)
-      socket.off("product:create")
+      socket.disconnect()
     }
   }, [])
+
+
 }

@@ -1,4 +1,3 @@
-import React from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter as Router } from "react-router-dom"
 import App from "./App"
@@ -12,7 +11,6 @@ if (container) {
   const root = createRoot(container)
 
   root.render(
-    <React.StrictMode>
       <Provider store={store}>
         <Router>
           <SnackbarProvider>
@@ -20,7 +18,6 @@ if (container) {
           </SnackbarProvider>
         </Router>
       </Provider>
-    </React.StrictMode>,
   )
 } else {
   throw new Error(

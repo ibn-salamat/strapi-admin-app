@@ -4,16 +4,10 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/strapi-admin-app',
   plugins: [react(), tsconfigPaths()],
   server: {
-    open: true,
+    host: true,
+    open: false,
     port: (Number(process.env.PORT)) || 3000
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "src/setupTests",
-    mockReset: true,
-  },
+  }
 })

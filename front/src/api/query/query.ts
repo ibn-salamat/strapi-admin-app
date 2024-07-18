@@ -71,13 +71,16 @@ export const mainApi = createApi({
       }),
     }),
     updateUserCart: builder.mutation<
-      void,
+      any,
       { userId: number; disconnect: number[]; connect: number[] }
     >({
       query: payload => ({
         method: "PUT",
         url: `/users/${payload.userId}`,
-        data: {
+        headers: {
+          Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+        },
+        body: {
           cart: {
             disconnect: payload.disconnect,
             connect: payload.connect,

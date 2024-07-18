@@ -15,6 +15,7 @@ import {
   useDeleteProductByIdMutation,
   useGetProductsQuery,
   useLazyGetUserByidQuery,
+  useUpdateUserCartMutation,
 } from "@/src/api/query"
 import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
@@ -26,7 +27,7 @@ import {
 import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
 import { CreateUpdateProductModal } from "@/src/components"
-import type { Product } from "@/src/types/product"
+import type { CartProduct, Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
 import { selectCartProducts, setCart, toggleFromCart } from "@/src/store/cart"
 
@@ -35,6 +36,8 @@ export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
   const [getUserById, getUserByIdResponse] = useLazyGetUserByidQuery()
+  const [updateUserCart] = useUpdateUserCartMutation()
+
   const cartProducts = useAppSelector(selectCartProducts)
 
   const [isOpenCreateProductModal, setIsOpenProductModal] = useState(false)
@@ -59,6 +62,38 @@ export const Admin = () => {
     saveCurrentUserToLocalStorage(null)
     dispatch(setCurrentUser(null))
     navigate(EnumRoutes.SignIn)
+  }
+
+  const handleToggleCartClick = async (product: CartProduct) => {
+    if (!currentUser?.id) return
+    const { id, product_id, title, price } = product;
+
+    const connect = []
+    const disconnect = []
+
+    const isFound = cartProducts.some(p => p.id === id)
+    if (isFound){
+        disconnect.push(product.id)
+    } else {
+        connect.push(product.id)
+    }
+
+    const response = await updateUserCart({
+        userId: currentUser.id,
+        connect,
+        disconnect
+    })
+
+    console.log(response)
+
+    dispatch(
+      toggleFromCart({
+        id,
+        product_id,
+        title,
+        price,
+      }),
+    )
   }
 
   useEffect(() => {
@@ -129,22 +164,20 @@ export const Admin = () => {
                     </TableCell>
                     <TableCell>
                       <Box display="flex" gap={1}>
-                      <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => {
-                              dispatch(
-                                toggleFromCart({
-                                  id,
-                                  product_id,
-                                  title,
-                                  price,
-                                }),
-                              )
-                            }}
-                          >
-                            {inCart ? "Remove from cart" : "Add to cart"}
-                          </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => {
+                            handleToggleCartClick({
+                              id,
+                              product_id,
+                              title,
+                              price,
+                            })
+                          }}
+                        >
+                          {inCart ? "Remove from cart" : "Add to cart"}
+                        </Button>
 
                         <Button
                           variant="outlined"

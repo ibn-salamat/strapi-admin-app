@@ -1,13 +1,14 @@
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
 import { BASE_URL } from "@/src/config"
 import type { Product } from "@/src/types/product"
 import { useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
-import { io } from "socket.io-client"
 
 export const useSocket = () => {
   const socket = io(BASE_URL)
-  const [isConnected, setIsConnected] = useState(socket.connected)
+  const [, setIsConnected] = useState(socket.connected)
   const { enqueueSnackbar } = useSnackbar()
+  const [eventResponse, setEventResponse] = useState<{ data: Product } | null>(null)
 
   const onConnect = () => {
     setIsConnected(true)
@@ -19,19 +20,24 @@ export const useSocket = () => {
     enqueueSnackbar("Socket disconnected", { variant: "error"})
   }
 
-  const onCreateProduct = (response: { data: Product }) => {
-    console.log(response.data)
+  const onProductChange = (response: { data: Product }) => {
+    enqueueSnackbar("Socket event happened", { variant: "success"})
+    setEventResponse(response)
   }
 
   useEffect(() => {
     socket.on("connect", onConnect)
     socket.on("disconnect", onDisconnect)
-    socket.on("product:create", onCreateProduct)
-
+    socket.on("product:create", onProductChange)
+    socket.on("product:delete", onProductChange)
+    socket.on("product:update", onProductChange)
+    
     return () => {
       socket.disconnect()
     }
   }, [])
 
-
+  return {
+    eventResponse
+  }
 }

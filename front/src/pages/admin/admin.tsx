@@ -15,7 +15,7 @@ import {
     useDeleteProductByIdMutation,
     useGetProductsQuery, useUpdateUserCartMutation
 } from "@/src/api/query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
 import {
@@ -27,12 +27,12 @@ import { UserCart, CreateUpdateProductModal } from "@/src/components"
 import type { CartProduct, Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
 import { selectCartProducts, toggleFromCart } from "@/src/store/cart"
-import { useSocket } from "@/src/api/socket/useSocket"
+import { useSocket } from "@/src/hooks"
 
 // TODO: move table into components
 export const Admin = () => {
-  useSocket()
-  const { data, isLoading } = useGetProductsQuery()
+  const { eventResponse } = useSocket()
+  const { data, isLoading, refetch } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
   const [updateUserCart] = useUpdateUserCartMutation()
 
@@ -81,6 +81,12 @@ export const Admin = () => {
       }),
     )
   }
+
+  useEffect(() => {
+    if (eventResponse){
+        refetch()
+    }
+  }, [eventResponse])
 
   if (isLoading) {
     return <CircularProgress />

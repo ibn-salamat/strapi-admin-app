@@ -1,11 +1,11 @@
-import { BasicRoutes } from "@/src/router"
+import { AppRoutes } from "@/src/router"
 import { useCurrentUser } from "@/src/hooks"
 
 const App = () => {
   useCurrentUser()
   
   return (
-    <BasicRoutes />
+    <AppRoutes />
   )
 }
 

@@ -16,7 +16,7 @@ const routes = [
   <Route path="*" element={<Navigate to={EnumRoutes.SignIn} />} />,
 ]
 
-export const BasicRoutes = () => {
+export const AppRoutes = () => {
   return (
     <Routes>
       {routes.map((R, i) => <React.Fragment key={i}>{R}</React.Fragment>)}

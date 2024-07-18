@@ -37,6 +37,19 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+    updateProductById: builder.mutation<{ data: Product }, Product>({
+      query: product => ({
+        method: "PUT",
+        url: `/products/${product.id}`,
+        headers: {
+          Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+        },
+        body: {
+          data: product.attributes,
+        },
+      }),
+      invalidatesTags: ["Products"],
+    }),
   }),
 })
 
@@ -44,4 +57,5 @@ export const {
   useGetProductsQuery,
   useLazyGetProductByidQuery,
   useCreateProductMutation,
+  useUpdateProductByIdMutation
 } = productsApi

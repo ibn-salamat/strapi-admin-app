@@ -1,47 +1,71 @@
-import {
-    TextField,
-    FormControl, Button,
-    Box
-} from "@mui/material"
+import { TextField, FormControl, Button, Box } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { useSnackbar } from "notistack"
-import { useCreateProductMutation } from "@/src/api/query/products"
+import {
+  useCreateProductMutation,
+  useUpdateProductByIdMutation,
+} from "@/src/api/query/products"
 import { CustomModal } from "../modal"
 import type { Product } from "@/src/types/product"
 import { useEffect } from "react"
 
 type Props = {
   handleClose: () => void
+  product?: Product
 }
 
 type FormValues = Product["attributes"]
 
-export const CreateUpdateProductModal = ({ handleClose }: Props) => {
+export const CreateUpdateProductModal = ({ handleClose, product }: Props) => {
   const [createProduct, createProductResponse] = useCreateProductMutation()
-  const title = "Create product"
+  const [updateProduct, updateProductResponse] = useUpdateProductByIdMutation()
+  const title = product ? "Update product" : "Create product"
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
-  } = useForm<FormValues>({})
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: product?.attributes,
+  })
   const { enqueueSnackbar } = useSnackbar()
 
   const onSubmit = async (data: FormValues) => {
-    createProduct(data)
+    product
+      ? updateProduct({
+          id: product.id,
+          attributes: data,
+        })
+      : createProduct(data)
   }
 
   useEffect(() => {
-    if (createProductResponse.isSuccess){
-        enqueueSnackbar("Created successfully", { variant: "success"})
-        handleClose()
+    if (createProductResponse.isSuccess) {
+      enqueueSnackbar("Created successfully", { variant: "success" })
+      handleClose()
     }
 
-    if (createProductResponse.isError){
-        const errorMessage = (createProductResponse.error as any)?.data?.error.message || "Something went wrong"
-        enqueueSnackbar(errorMessage , {variant: "error"})
+    if (createProductResponse.isError) {
+      const errorMessage =
+        (createProductResponse.error as any)?.data?.error.message ||
+        "Something went wrong"
+      enqueueSnackbar(errorMessage, { variant: "error" })
     }
   }, [createProductResponse.isSuccess, createProductResponse.isError])
+
+  useEffect(() => {
+    if (updateProductResponse.isSuccess) {
+      enqueueSnackbar("Updated successfully", { variant: "success" })
+      handleClose()
+    }
+
+    if (updateProductResponse.isError) {
+      const errorMessage =
+        (updateProductResponse.error as any)?.data?.error.message ||
+        "Something went wrong"
+      enqueueSnackbar(errorMessage, { variant: "error" })
+    }
+  }, [updateProductResponse.isSuccess, updateProductResponse.isError])
 
   return (
     <>
@@ -86,15 +110,27 @@ export const CreateUpdateProductModal = ({ handleClose }: Props) => {
             </FormControl>
           </Box>
           <Box style={{ marginTop: 15, display: "flex", gap: 15 }}>
-            <Button
-              size="small"
-              color="primary"
-              variant="contained"
-              type="submit"
-              disabled={isLoading}
-            >
-              Create
-            </Button>
+            {product ? (
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={updateProductResponse.isLoading}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={createProductResponse.isLoading}
+              >
+                Create
+              </Button>
+            )}
           </Box>
         </form>
       </CustomModal>

@@ -11,7 +11,7 @@ import {
   Box,
   Button,
 } from "@mui/material"
-import { useGetProductsQuery } from "@/src/api/query/products"
+import { useDeleteProductByIdMutation, useGetProductsQuery } from "@/src/api/query/products"
 import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
@@ -27,6 +27,7 @@ import type { Product } from "@/src/types/product"
 // TODO: move table into components
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
+  const [deleteProductById] = useDeleteProductByIdMutation()
 
   const [isOpenCreateProductModal, setIsOpenProductModal] = useState(false)
   const [productDataToUpdate, setProductDataToUpdate] = useState<Product | null>(null)
@@ -103,7 +104,7 @@ export const Admin = () => {
                       >
                         Update
                       </Button>
-                      <Button variant="outlined" color="error" size="small">
+                      <Button variant="outlined" color="error" size="small" onClick={() => deleteProductById(id)}>
                         Delete
                       </Button>
                     </Box>

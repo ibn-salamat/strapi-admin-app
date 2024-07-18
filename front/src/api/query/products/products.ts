@@ -50,6 +50,16 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+    deleteProductById: builder.mutation<{ data: Product }, number>({
+      query: id => ({
+        method: "DELETE",
+        url: `/products/${id}`,
+        headers: {
+          Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+        }
+      }),
+      invalidatesTags: ["Products"]
+    }),
   }),
 })
 
@@ -57,5 +67,6 @@ export const {
   useGetProductsQuery,
   useLazyGetProductByidQuery,
   useCreateProductMutation,
-  useUpdateProductByIdMutation
+  useUpdateProductByIdMutation,
+  useDeleteProductByIdMutation
 } = productsApi

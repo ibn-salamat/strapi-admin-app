@@ -1,4 +1,5 @@
 type ImageData = {
+    id: number
     attributes: {
         url: string
     }
@@ -17,5 +18,10 @@ export type Product = {
     id: number
     attributes: ProductAttributes
 }
+
+export type UpdateProductPayload = {
+    id: number
+    image: {id: number}[]
+} & Omit<ProductAttributes, "image">
 
 export type CartProduct = Omit<Product['attributes'], "image"> & Pick<Product, "id">

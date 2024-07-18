@@ -33,8 +33,9 @@ export const CreateUpdateProductModal = ({ handleClose, product }: Props) => {
   const onSubmit = async (data: FormValues) => {
     product
       ? updateProduct({
+          ...data,
           id: product.id,
-          attributes: data,
+          image: product.attributes?.image?.data.map(img => ({id: img.id})),
         })
       : createProduct(data)
   }

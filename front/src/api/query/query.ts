@@ -1,5 +1,5 @@
 import { BASE_URL, STRAPI_API_TOKEN } from "@/src/config"
-import type { Product } from "@/src/types/product"
+import type { Product, UpdateProductPayload } from "@/src/types/product"
 import type { User } from "@/src/types/user"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
@@ -38,7 +38,7 @@ export const mainApi = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
-    updateProductById: builder.mutation<{ data: Product }, Product>({
+    updateProductById: builder.mutation<{ data: Product }, UpdateProductPayload>({
       query: product => ({
         method: "PUT",
         url: `/products/${product.id}`,
@@ -46,7 +46,7 @@ export const mainApi = createApi({
           Authorization: `Bearer ${STRAPI_API_TOKEN}`,
         },
         body: {
-          data: product.attributes,
+          data: product,
         },
       }),
       invalidatesTags: ["Products"],

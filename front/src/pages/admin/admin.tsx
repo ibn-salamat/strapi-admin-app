@@ -12,22 +12,23 @@ import {
   Button,
 } from "@mui/material"
 import {
-    useCreateProductMutation,
   useGetProductsQuery,
   useLazyGetProductByidQuery,
 } from "@/src/api/query/products"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
 import { getCurrentUserFromLocalStorage, saveCurrentUserToLocalStorage } from "@/src/helpers"
 import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
+import { CreateUpdateProductModal } from "@/src/components"
 
 // TODO: move table into components
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [getProductById, { data: product }] = useLazyGetProductByidQuery()
-  const [createProduct] = useCreateProductMutation()
+
+  const [isOpenCreateProductModal, setIsOpenProductModal] = useState(false)
 
   const currentUser = useAppSelector(selectCurrentUser)
   const dispatch = useAppDispatch()
@@ -64,18 +65,13 @@ export const Admin = () => {
   }
 
   return (
+    <>
     <Box style={{ padding: 25 }}>
       <Typography variant="h4" mb={3}>
         Products
         <Button onClick={logout}>Log out</Button>
       </Typography>
-      <Button variant="outlined" onClick={() => {
-        createProduct({
-            price: 1,
-            product_id: "dslfk",
-            title: "dkfl"
-        })
-      }}>Create product</Button>
+      <Button variant="outlined" onClick={() => setIsOpenProductModal(true)}>Create product</Button>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -121,5 +117,8 @@ export const Admin = () => {
         </Table>
       </TableContainer>
     </Box>
+
+    {isOpenCreateProductModal && <CreateUpdateProductModal handleClose={() => setIsOpenProductModal(false)} />}
+    </>
   )
 }

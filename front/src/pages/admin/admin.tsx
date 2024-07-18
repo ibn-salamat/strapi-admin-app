@@ -26,7 +26,7 @@ import {
 } from "@/src/helpers"
 import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
-import { CreateUpdateProductModal } from "@/src/components"
+import { UserCart, CreateUpdateProductModal } from "@/src/components"
 import type { CartProduct, Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
 import { selectCartProducts, setCart, toggleFromCart } from "@/src/store/cart"
@@ -114,12 +114,13 @@ export const Admin = () => {
     return <CircularProgress />
   }
 
-  console.log(cartProducts)
-
   return (
     <>
+      <UserCart />
+
       <Box style={{ padding: 25 }}>
-        <Typography variant="h4" mb={3}>
+
+        <Typography variant="h4" my={3}>
           Products
           <Button size="small" onClick={logout} style={{ marginLeft: 5 }}>
             Log out

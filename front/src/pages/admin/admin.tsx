@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
 import { CreateUpdateProductModal } from "@/src/components"
 import type { Product } from "@/src/types/product"
+import { BASE_URL } from "@/src/config"
 
 // TODO: move table into components
 export const Admin = () => {
@@ -68,6 +69,8 @@ export const Admin = () => {
     return <CircularProgress />
   }
 
+  console.log(data)
+
   return (
     <>
       <Box style={{ padding: 25 }}>
@@ -83,42 +86,56 @@ export const Admin = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell>id</TableCell>
                 <TableCell>product_id</TableCell>
                 <TableCell>title</TableCell>
                 <TableCell>price</TableCell>
+                <TableCell>img</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.map(({ id, attributes }) => (
-                <TableRow key={id}>
-                  <TableCell>{attributes.product_id}</TableCell>
-                  <TableCell>{attributes.title}</TableCell>
-                  <TableCell>{attributes.price}</TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <Button variant="outlined" size="small">
-                        Add to cart
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() =>
-                          setProductDataToUpdate({
-                            id,
-                            attributes,
-                          })
-                        }
-                      >
-                        Update
-                      </Button>
-                      <Button variant="outlined" color="error" size="small" onClick={() => deleteProductById(id)}>
-                        Delete
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {data?.data.map(({ id, attributes }) => {
+                const { product_id, title, price, image } = attributes
+                let imageUrl
+                if (image.data && image.data.length > 0){
+                    imageUrl = `${BASE_URL}${attributes.image.data?.[0].attributes.url}`
+                }
+
+                return (
+                    <TableRow key={id}>
+                      <TableCell>{id}</TableCell>
+                      <TableCell>{product_id}</TableCell>
+                      <TableCell>{title}</TableCell>
+                      <TableCell>{price}</TableCell>
+                      <TableCell>
+                        {imageUrl && <img src={imageUrl} alt="" width={40} height={40} />}
+                      </TableCell>
+                      <TableCell>
+                        <Box display="flex" gap={1}>
+                          <Button variant="outlined" size="small">
+                            Add to cart
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={() =>
+                              setProductDataToUpdate({
+                                id,
+                                attributes,
+                              })
+                            }
+                          >
+                            Update
+                          </Button>
+                          <Button variant="outlined" color="error" size="small" onClick={() => deleteProductById(id)}>
+                            Delete
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )
+              })}
             </TableBody>
           </Table>
         </TableContainer>

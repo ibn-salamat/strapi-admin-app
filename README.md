@@ -6,6 +6,8 @@ npm install
 npm start
 ~~~
 
+to make Socket plugion work you need to give access to your ContentType
+
 ## Refactor todo:
 
 - Eslint, Prettier config

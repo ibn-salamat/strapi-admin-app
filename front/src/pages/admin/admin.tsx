@@ -18,6 +18,9 @@ import {
 import { useEffect } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
+import { getCurrentUserFromLocalStorage, saveCurrentUserToLocalStorage } from "@/src/helpers"
+import { useNavigate } from "react-router-dom"
+import { EnumRoutes } from "@/src/router"
 
 // TODO: move table into components
 export const Admin = () => {
@@ -26,13 +29,33 @@ export const Admin = () => {
 
   const currentUser = useAppSelector(selectCurrentUser)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
-  console.log(currentUser)
+  const checkUser = () => {
+    const user = getCurrentUserFromLocalStorage()
+    if (!user) {
+        navigate(EnumRoutes.SignIn)
+        return
+    }
+
+    dispatch(setCurrentUser(user))
+  }
+
+  const logout = () => {
+    saveCurrentUserToLocalStorage(null)
+    dispatch(setCurrentUser(null))
+    navigate(EnumRoutes.SignIn)
+  }
+
 
   useEffect(() => {
-    console.log(product?.data.id)
+    // console.log(product?.data.id)
     // dispatch(setCurrentUser({email: "ds"}))
   }, [product])
+
+  useEffect(() => {
+    checkUser()
+  }, [])
 
   if (isLoading) {
     return <CircularProgress />
@@ -42,6 +65,7 @@ export const Admin = () => {
     <Box style={{ padding: 25 }}>
       <Typography variant="h4" mb={3}>
         Products
+        <Button onClick={logout}>Log out</Button>
       </Typography>
       <Button variant="outlined">Create product</Button>
 

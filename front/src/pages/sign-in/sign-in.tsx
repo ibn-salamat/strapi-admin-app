@@ -13,6 +13,9 @@ import { useNavigate } from "react-router-dom"
 import { EnumRoutes } from "@/src/router"
 import { setToken } from "@/src/helpers/token"
 import { BASE_URL } from "@/src/config"
+import { saveCurrentUserToLocalStorage } from "@/src/helpers"
+import { useAppDispatch } from "@/src/store"
+import { setCurrentUser } from "@/src/store/user"
 
 type FormValues = {
     email: string
@@ -28,6 +31,7 @@ export const SignIn = () => {
     });
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch()
 
     const onSubmit = async (data: FormValues) => {
         try {
@@ -37,6 +41,8 @@ export const SignIn = () => {
         })
 
         setToken(response.data.jwt)
+        saveCurrentUserToLocalStorage(response.data.user)
+        dispatch(setCurrentUser(response.data.user))
         navigate(EnumRoutes.Admin)
 
         } catch (error) {

@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     open: true,
+    port: (Number(process.env.PORT)) || 3000
   },
   test: {
     globals: true,

@@ -125,7 +125,10 @@ export const Admin = () => {
                 const { product_id, title, price, image } = attributes
                 let imageUrl
                 if (image.data && image.data.length > 0) {
-                  imageUrl = `${BASE_URL}${attributes.image.data?.[0].attributes.url}`
+                  let url = attributes.image.data?.[0].attributes.url
+                  if (url) {
+                      imageUrl = url.includes("http") ? url : `${BASE_URL}${url}`
+                  } 
                 }
 
                 const inCart = cartProducts.findIndex(p => p.id === id) > -1

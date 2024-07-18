@@ -6,7 +6,7 @@ npm install
 npm start
 ~~~
 
-to make Socket plugion work you need to give access to your ContentType
+In local to make Socket plugin work you need to give access to your ContentType in Strapi Admin Panel
 
 ## Refactor todo:
 

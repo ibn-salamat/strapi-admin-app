@@ -78,13 +78,11 @@ export const Admin = () => {
         connect.push(product.id)
     }
 
-    const response = await updateUserCart({
+    await updateUserCart({
         userId: currentUser.id,
         connect,
         disconnect
     })
-
-    console.log(response)
 
     dispatch(
       toggleFromCart({

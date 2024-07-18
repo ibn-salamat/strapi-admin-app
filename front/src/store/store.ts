@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import { productsApi } from '@/src/api/query/products'
+import { productsApi, userApi } from '@/src/api/query'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useSelector, useDispatch } from 'react-redux'
 import { userSlice } from './user'
@@ -11,9 +11,10 @@ export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(productsApi.middleware),
+    getDefaultMiddleware().concat(productsApi.middleware, userApi.middleware),
 })
 
 setupListeners(store.dispatch)

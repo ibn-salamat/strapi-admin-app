@@ -9,7 +9,7 @@ export const productsApi = createApi({
   endpoints: builder => ({
     getProducts: builder.query<{ data: Product[] }, void>({
       query: () => ({
-        url: `/products`,
+        url: `/products?populate=*`,
         headers: {
           Authorization: `Bearer ${STRAPI_API_TOKEN}`,
         },

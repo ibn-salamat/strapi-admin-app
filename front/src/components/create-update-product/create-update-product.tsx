@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack"
 import {
   useCreateProductMutation,
   useUpdateProductByIdMutation,
-} from "@/src/api/query/products"
+} from "@/src/api/query"
 import { CustomModal } from "../modal"
 import type { Product } from "@/src/types/product"
 import { useEffect } from "react"

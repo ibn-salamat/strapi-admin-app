@@ -11,7 +11,7 @@ import {
   Box,
   Button,
 } from "@mui/material"
-import { useDeleteProductByIdMutation, useGetProductsQuery } from "@/src/api/query/products"
+import { useDeleteProductByIdMutation, useGetProductsQuery, useLazyGetUserByidQuery } from "@/src/api/query"
 import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
@@ -28,6 +28,7 @@ import type { Product } from "@/src/types/product"
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
+  const [getUserById, getUserByIdResponse] = useLazyGetUserByidQuery()
 
   const [isOpenCreateProductModal, setIsOpenProductModal] = useState(false)
   const [productDataToUpdate, setProductDataToUpdate] = useState<Product | null>(null)
@@ -55,6 +56,13 @@ export const Admin = () => {
   useEffect(() => {
     checkUser()
   }, [])
+
+  console.log(getUserByIdResponse)
+
+  useEffect(() => {
+    if (!currentUser) return
+    getUserById(currentUser.id)
+  }, [currentUser])
 
   if (isLoading) {
     return <CircularProgress />

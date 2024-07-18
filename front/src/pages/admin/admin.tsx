@@ -27,9 +27,11 @@ import { UserCart, CreateUpdateProductModal } from "@/src/components"
 import type { CartProduct, Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
 import { selectCartProducts, toggleFromCart } from "@/src/store/cart"
+import { useSocket } from "@/src/api/socket/useSocket"
 
 // TODO: move table into components
 export const Admin = () => {
+  useSocket()
   const { data, isLoading } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
   const [updateUserCart] = useUpdateUserCartMutation()

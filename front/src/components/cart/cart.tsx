@@ -8,13 +8,9 @@ export const UserCart = () => {
     return <Card style={{padding: 25}}>
         <Typography variant="h4">Cart component</Typography>
 
-        <Typography display="inline">
-            Selected Products ID: 
             <Typography fontSize={20}  display="inline">
-                <code>[{cartProducts.map(p => p.id).join(", ")}]</code>
+            Selected Products ID: 
+            <code>[{cartProducts.map(p => p.id).join(", ")}]</code>
             </Typography>
-        </Typography>
-   
-        
     </Card>
 }

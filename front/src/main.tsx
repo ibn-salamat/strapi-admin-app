@@ -1,6 +1,10 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
+import { BrowserRouter as Router } from "react-router-dom"
 import App from "./App"
+import { Provider } from "react-redux"
+import { SnackbarProvider } from "notistack"
+import { store } from "./store"
 
 const container = document.getElementById("root")
 
@@ -9,7 +13,13 @@ if (container) {
 
   root.render(
     <React.StrictMode>
-        <App />
+      <Provider store={store}>
+        <Router>
+          <SnackbarProvider>
+            <App />
+          </SnackbarProvider>
+        </Router>
+      </Provider>
     </React.StrictMode>,
   )
 } else {

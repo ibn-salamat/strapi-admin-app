@@ -1,18 +1,13 @@
 import {
-  RouterProvider,
+  useNavigate
 } from "react-router-dom";
-import { router } from "./router";
-import { SnackbarProvider } from 'notistack';
-import { Provider } from 'react-redux'
-import { store } from "@/src/store";
+import { BasicRoutes } from "./router";
 
 const App = () => {
+  const navigate = useNavigate()
+  
   return (
-    <SnackbarProvider>
-      <Provider store={store}>
-       <RouterProvider router={router} />
-      </Provider>
-    </SnackbarProvider>
+    <BasicRoutes />
   )
 }
 

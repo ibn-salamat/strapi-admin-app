@@ -11,7 +11,11 @@ import {
   Box,
   Button,
 } from "@mui/material"
-import { useDeleteProductByIdMutation, useGetProductsQuery, useLazyGetUserByidQuery } from "@/src/api/query"
+import {
+  useDeleteProductByIdMutation,
+  useGetProductsQuery,
+  useLazyGetUserByidQuery,
+} from "@/src/api/query"
 import { useEffect, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
@@ -24,15 +28,18 @@ import { EnumRoutes } from "@/src/router"
 import { CreateUpdateProductModal } from "@/src/components"
 import type { Product } from "@/src/types/product"
 import { BASE_URL } from "@/src/config"
+import { selectCartProducts, setCart, toggleFromCart } from "@/src/store/cart"
 
 // TODO: move table into components
 export const Admin = () => {
   const { data, isLoading } = useGetProductsQuery()
   const [deleteProductById] = useDeleteProductByIdMutation()
   const [getUserById, getUserByIdResponse] = useLazyGetUserByidQuery()
+  const cartProducts = useAppSelector(selectCartProducts)
 
   const [isOpenCreateProductModal, setIsOpenProductModal] = useState(false)
-  const [productDataToUpdate, setProductDataToUpdate] = useState<Product | null>(null)
+  const [productDataToUpdate, setProductDataToUpdate] =
+    useState<Product | null>(null)
 
   const currentUser = useAppSelector(selectCurrentUser)
   const dispatch = useAppDispatch()
@@ -58,25 +65,30 @@ export const Admin = () => {
     checkUser()
   }, [])
 
-  console.log(getUserByIdResponse)
-
   useEffect(() => {
     if (!currentUser) return
     getUserById(currentUser.id)
   }, [currentUser])
 
+  useEffect(() => {
+    if (!getUserByIdResponse.data) return
+    dispatch(setCart(getUserByIdResponse.data.cart || []))
+  }, [getUserByIdResponse.data])
+
   if (isLoading) {
     return <CircularProgress />
   }
 
-  console.log(data)
+  console.log(cartProducts)
 
   return (
     <>
       <Box style={{ padding: 25 }}>
         <Typography variant="h4" mb={3}>
           Products
-          <Button size="small" onClick={logout} style={{marginLeft: 5}}>Log out</Button>
+          <Button size="small" onClick={logout} style={{ marginLeft: 5 }}>
+            Log out
+          </Button>
         </Typography>
         <Button variant="outlined" onClick={() => setIsOpenProductModal(true)}>
           Create product
@@ -98,43 +110,66 @@ export const Admin = () => {
               {data?.data.map(({ id, attributes }) => {
                 const { product_id, title, price, image } = attributes
                 let imageUrl
-                if (image.data && image.data.length > 0){
-                    imageUrl = `${BASE_URL}${attributes.image.data?.[0].attributes.url}`
+                if (image.data && image.data.length > 0) {
+                  imageUrl = `${BASE_URL}${attributes.image.data?.[0].attributes.url}`
                 }
 
+                const inCart = cartProducts.findIndex(p => p.id === id) > -1
+
                 return (
-                    <TableRow key={id}>
-                      <TableCell>{id}</TableCell>
-                      <TableCell>{product_id}</TableCell>
-                      <TableCell>{title}</TableCell>
-                      <TableCell>{price}</TableCell>
-                      <TableCell>
-                        {imageUrl && <img src={imageUrl} alt="" width={40} height={40} />}
-                      </TableCell>
-                      <TableCell>
-                        <Box display="flex" gap={1}>
-                          <Button variant="outlined" size="small">
-                            Add to cart
-                          </Button>
-                          <Button
+                  <TableRow key={id}>
+                    <TableCell>{id}</TableCell>
+                    <TableCell>{product_id}</TableCell>
+                    <TableCell>{title}</TableCell>
+                    <TableCell>{price}</TableCell>
+                    <TableCell>
+                      {imageUrl && (
+                        <img src={imageUrl} alt="" width={40} height={40} />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Box display="flex" gap={1}>
+                      <Button
                             variant="outlined"
                             size="small"
-                            onClick={() =>
-                              setProductDataToUpdate({
-                                id,
-                                attributes,
-                              })
-                            }
+                            onClick={() => {
+                              dispatch(
+                                toggleFromCart({
+                                  id,
+                                  product_id,
+                                  title,
+                                  price,
+                                }),
+                              )
+                            }}
                           >
-                            Update
+                            {inCart ? "Remove from cart" : "Add to cart"}
                           </Button>
-                          <Button variant="outlined" color="error" size="small" onClick={() => deleteProductById(id)}>
-                            Delete
-                          </Button>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  )
+
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() =>
+                            setProductDataToUpdate({
+                              id,
+                              attributes,
+                            })
+                          }
+                        >
+                          Update
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => deleteProductById(id)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )
               })}
             </TableBody>
           </Table>
@@ -147,7 +182,7 @@ export const Admin = () => {
         />
       )}
 
-    {productDataToUpdate && (
+      {productDataToUpdate && (
         <CreateUpdateProductModal
           handleClose={() => setProductDataToUpdate(null)}
           product={productDataToUpdate}

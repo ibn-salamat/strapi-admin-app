@@ -1,5 +1,5 @@
 import { BASE_URL, STRAPI_API_TOKEN } from "@/src/config"
-import type { Product } from "@/src/types/product"
+import type { User } from "@/src/types/user"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const userApi = createApi({
@@ -7,7 +7,7 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api` }),
   tagTypes: ["User"],
   endpoints: builder => ({
-    getUserByid: builder.query<{ data: Product }, number>({
+    getUserByid: builder.query<User, number>({
       query: id => ({
         url: `/users/${id}?populate=*`,
         headers: {

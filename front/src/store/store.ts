@@ -4,12 +4,12 @@ import { productsApi, userApi } from '@/src/api/query'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useSelector, useDispatch } from 'react-redux'
 import { userSlice } from './user'
-
-
+import { cartSlice } from './cart'
 
 export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
+    cart: cartSlice.reducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
   },

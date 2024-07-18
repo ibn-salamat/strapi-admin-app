@@ -17,3 +17,5 @@ export type Product = {
     id: number
     attributes: ProductAttributes
 }
+
+export type CartProduct = Omit<Product['attributes'], "image"> & Pick<Product, "id">

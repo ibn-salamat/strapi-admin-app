@@ -5,7 +5,6 @@ const authService = axios.create({
   baseURL: `${BASE_URL}/api/auth`,
 })
 
-// api/auth/local/register
 export const signUpUser = (data: {
   username: string
   email: string

@@ -15,7 +15,7 @@ import {
     useDeleteProductByIdMutation,
     useGetProductsQuery, useUpdateUserCartMutation
 } from "@/src/api/query"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { selectCurrentUser, setCurrentUser } from "@/src/store/user"
 import { useAppDispatch, useAppSelector } from "@/src/store"
 import {
@@ -88,6 +88,16 @@ export const Admin = () => {
     }
   }, [eventResponse])
 
+  const sortedProducts = useMemo(() => {
+    let products = data?.data
+    if (!products || Array.isArray(products) && products.length === 0) return []
+    // @ts-ignore
+    products = [...data.data]
+    products.sort((a,b) => Number(a.attributes.price) - Number(b.attributes.price))
+    
+    return products
+  }, [data?.data])
+
   if (isLoading) {
     return <CircularProgress />
   }
@@ -121,7 +131,7 @@ export const Admin = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.map(({ id, attributes }) => {
+              {sortedProducts.map(({ id, attributes }) => {
                 const { product_id, title, price, image } = attributes
                 let imageUrl
                 if (image.data && image.data.length > 0) {

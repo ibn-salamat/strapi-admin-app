@@ -15,6 +15,3 @@ In local to make Socket plugin work you need to give access to your ContentType 
 - make Table common components
 - ~~create hook for currentuserLogic~~
 - split RTK queries by logic
-
-
-> p.s. take it easy on critisizing it was developed in hurry ( about 8 hours)
